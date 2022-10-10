@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DataAccess.Repositories
 {
-    class ItemsRepository
+    public class ItemsRepository
     {
         public IQueryable<Item> GetItems()
         { return null; }
