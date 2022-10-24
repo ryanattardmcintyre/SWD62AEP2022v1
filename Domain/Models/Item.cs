@@ -35,5 +35,7 @@ namespace Domain.Models
         public string PhotoPath { get; set; }
 
         public int Stock { get; set; }
+
+        //public string SupplierInfo {get;set;}
     }
 }
