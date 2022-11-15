@@ -15,17 +15,23 @@ namespace WebApplication1.Controllers
     public class ItemsController : Controller
     {
         private ItemsServices itemsService;
+        private CategoriesServices categoriesService;
         private IWebHostEnvironment host;
-        public ItemsController(ItemsServices _itemsService, IWebHostEnvironment _host)
+        public ItemsController(ItemsServices _itemsService, IWebHostEnvironment _host, CategoriesServices _categoriesService)
         { itemsService = _itemsService;
             host = _host;
+            categoriesService = _categoriesService;
         }
 
         //a method to open the page, then the user starts typing
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            var categories = categoriesService.GetCategories();
+            CreateItemViewModel myModel = new CreateItemViewModel();
+            myModel.Categories = categories.ToList();
+
+            return View(myModel);
         }
 
         //a method to handle the submission of the form
@@ -66,7 +72,10 @@ namespace WebApplication1.Controllers
             {
                 ViewBag.Error = "Item wasn't inserted successfully. Please check your inputs";
             }
-            return View();
+
+            var categories = categoriesService.GetCategories();
+            data.Categories = categories.ToList();
+            return View(data);
         }
 
         public IActionResult List()
@@ -79,6 +88,36 @@ namespace WebApplication1.Controllers
         {
             var myItem = itemsService.GetItem(id);
             return View(myItem);
+        }
+
+        [HttpPost]
+        public IActionResult Search(string keyword)
+        {
+            if (string.IsNullOrEmpty(keyword))
+                return RedirectToAction("List");
+            else
+            {
+                var list = itemsService.Search(keyword);
+                return View("List", list);
+            }
+        }
+
+        
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                itemsService.DeleteItem(id);
+                //ViewBag will not work here because Viewbag is lost when there is a redirection
+                //TempData survives redirections (up to 1 redirection)
+                TempData["message"] = "Item has been deleted";
+
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "Item has not been deleted";
+            }
+            return RedirectToAction("List");
         }
     }
 }

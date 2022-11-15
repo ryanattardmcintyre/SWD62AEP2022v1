@@ -18,8 +18,13 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <input asp-for="CategoryId" class="form-control" />
+                Select a Category:
+                <select name="CategoryId" class="form-control">
+                    @foreach(var c in Model.Categories )
+                    {
+                        <option value="@c.Id">@c.Title</option>
+                    }
+                </select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
             <div class="form-group">

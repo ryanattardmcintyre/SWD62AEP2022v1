@@ -41,5 +41,10 @@ namespace DataAccess.Repositories
             context.SaveChanges();
                
         }
+
+        public Item GetItem(int id)
+        {
+            return context.Items.SingleOrDefault(x => x.Id == id);
+        }
     }
 }

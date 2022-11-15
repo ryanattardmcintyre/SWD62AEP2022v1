@@ -44,7 +44,10 @@ namespace BusinessLogic.Services
         }
 
         public void DeleteItem(int id)
-        {  
+        {
+            var item = ir.GetItem(id);
+            if(item != null)
+                ir.DeleteItem(item);
         }
 
         public void Checkout()

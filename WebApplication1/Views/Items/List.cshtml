@@ -9,6 +9,13 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form method="post" action="/Items/Search">
+    Search:&nbsp;
+    <input type="text" class="form-control col-md-6" name="keyword" />&nbsp;
+    <input type="submit" value="Submit" class="btn btn-secondary" />
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -51,7 +58,7 @@
                 @*<a href="/Items/Details/@item.Id">More Info</a>*@
 
 
-                @*@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                 @Html.ActionLink("Delete", "Delete", new {   id=item.Id  }) 
             </td>
         </tr>
 }

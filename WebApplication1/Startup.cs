@@ -1,6 +1,7 @@
 using BusinessLogic.Services;
 using DataAccess.Context;
 using DataAccess.Repositories;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
  
@@ -64,6 +66,18 @@ namespace WebApplication1
 
             services.AddScoped<ItemsServices>();
             services.AddScoped<ItemsRepository>();
+
+            //we are instructing the clr so that when it comes across ICategoriesRepository (in the constructor), it should initialize
+            //the class declared after the comma
+
+            FileInfo fi = new FileInfo(@"C:\Users\attar\source\repos\SWD62AEP2022v1\WebApplication1\Data\categories.txt");
+            //reads categories from a file
+           //  services.AddScoped<ICategoriesRepository, CategoriesFileRepository>(x => new CategoriesFileRepository(fi));
+            
+            //reads categories from db
+            services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+            
+            services.AddScoped<CategoriesServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

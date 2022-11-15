@@ -7,7 +7,7 @@ namespace BusinessLogic.ViewModels
     //is a selection of the required properties to be used by the presentation (interface) layer
     public class CreateItemViewModel
     {
-
+        public List<CategoryViewModel> Categories { get; set; }
         
         public string Name { get; set; }
 
