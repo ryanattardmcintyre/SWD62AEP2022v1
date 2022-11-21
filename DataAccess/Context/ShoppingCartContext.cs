@@ -13,7 +13,9 @@ namespace DataAccess.Context
     //add-migration <name> ShoppingCartContext
     //update-database
 
-    public class ShoppingCartContext: IdentityDbContext
+    
+
+    public class ShoppingCartContext: IdentityDbContext<CustomUser>
     {
         public ShoppingCartContext(DbContextOptions<ShoppingCartContext> options)
                : base(options)

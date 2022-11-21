@@ -2,6 +2,7 @@ using BusinessLogic.Services;
 using DataAccess.Context;
 using DataAccess.Repositories;
 using Domain.Interfaces;
+using Domain.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -35,7 +36,7 @@ namespace WebApplication1
             services.AddDbContext<ShoppingCartContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<CustomUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ShoppingCartContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
