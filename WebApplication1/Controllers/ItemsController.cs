@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Services;
 using BusinessLogic.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 namespace WebApplication1.Controllers
 {
     //are going to handle the incoming requests and outgoing responses
+     
     public class ItemsController : Controller
     {
         private ItemsServices itemsService;
@@ -24,7 +26,7 @@ namespace WebApplication1.Controllers
         }
 
         //a method to open the page, then the user starts typing
-        [HttpGet]
+        [HttpGet][Authorize]
         public IActionResult Create()
         {
             var categories = categoriesService.GetCategories();
@@ -36,36 +38,51 @@ namespace WebApplication1.Controllers
 
         //a method to handle the submission of the form
         [HttpPost]
+        [Authorize]
         public IActionResult Create(CreateItemViewModel data, IFormFile file)
         { //.....
             try
             {
-                if(file != null)
+                if (ModelState.IsValid)
                 {
-                    //1 change filename
-                    string uniqueFilename = Guid.NewGuid().ToString() + System.IO.Path.GetExtension(file.FileName);
-                    
-                    //2. i need the absolute path of the folder where the image is going....
-                    //e.g. C:\Users\attar\Source\Repos\SWD62AEP2022v1\WebApplication1\wwwroot\Images\
 
-                    string absolutePath = host.WebRootPath ;
+                    //check that the category exists in the db
 
-                    //3. saving file
-                    using (FileStream fsOut = new FileStream(absolutePath + "\\Images\\" + uniqueFilename, FileMode.CreateNew))
+                    //if not
+                  //  ModelState.AddModelError("CategoryId", "Category is not valid");
+                 //   return View(data);
+
+
+                    string username = User.Identity.Name; //gives you the email/username of the currently logged in user
+
+                    if (file != null)
                     {
-                        file.CopyTo(fsOut);
+                        //1 change filename
+                        string uniqueFilename = Guid.NewGuid().ToString() + System.IO.Path.GetExtension(file.FileName);
+
+                        //2. i need the absolute path of the folder where the image is going....
+                        //e.g. C:\Users\attar\Source\Repos\SWD62AEP2022v1\WebApplication1\wwwroot\Images\
+
+                        string absolutePath = host.WebRootPath;
+
+                        //3. saving file
+                        using (FileStream fsOut = new FileStream(absolutePath + "\\Images\\" + uniqueFilename, FileMode.CreateNew))
+                        {
+                            file.CopyTo(fsOut);
+                        }
+
+                        //4. save the path to the image in the database
+                        //http://localhost:xxxx/Images/filename.jpg
+                        data.PhotoPath = "/Images/" + uniqueFilename;
                     }
 
-                    //4. save the path to the image in the database
-                    //http://localhost:xxxx/Images/filename.jpg
-                    data.PhotoPath = "/Images/" + uniqueFilename;
+                    //data.Author = username
+                    itemsService.AddItem(data); //to test
+                                                //dynamic object - it builds the declared properties on-the-fly i.e. the moment you declare the property
+                                                //"Message" it builds in realtime in memory
+                    ViewBag.Message = "Item successfully inserted in database";
                 }
-
-
-                itemsService.AddItem(data); //to test
-                //dynamic object - it builds the declared properties on-the-fly i.e. the moment you declare the property
-                //"Message" it builds in realtime in memory
-                ViewBag.Message = "Item successfully inserted in database";
+               
 
             }
             catch(Exception ex)
@@ -78,6 +95,7 @@ namespace WebApplication1.Controllers
             return View(data);
         }
 
+       
         public IActionResult List()
         {
             var list = itemsService.GetItems();
@@ -102,7 +120,7 @@ namespace WebApplication1.Controllers
             }
         }
 
-        
+        [Authorize]
         public IActionResult Delete(int id)
         {
             try
