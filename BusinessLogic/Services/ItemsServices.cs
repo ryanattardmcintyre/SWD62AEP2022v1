@@ -111,6 +111,23 @@ namespace BusinessLogic.Services
             return Search(keyword).Where(x => x.Price >= minPrice && x.Price <= maxPrice);
         }
 
+
+        public void EditItem(int id, CreateItemViewModel updatedItem)
+        {
+            ir.EditItem(
+                new Domain.Models.Item()
+                {
+                    Id = id,
+                    CategoryId = updatedItem.CategoryId,
+                    Description = updatedItem.Description,
+                    Name = updatedItem.Name,
+                    PhotoPath = updatedItem.PhotoPath,
+                    Price = updatedItem.Price,
+                    Stock = updatedItem.Stock
+                }
+                );
+
+        }
        
     }
 }

@@ -57,9 +57,16 @@
 
                 @*<a href="/Items/Details/@item.Id">More Info</a>*@
 
-                @if (User.Identity.IsAuthenticated )
+                @if (User.Identity.IsAuthenticated)
                 {
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }) 
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                }
+
+                |
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id })
                 }
 
             </td>

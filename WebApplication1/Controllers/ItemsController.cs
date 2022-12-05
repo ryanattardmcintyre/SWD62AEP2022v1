@@ -94,7 +94,6 @@ namespace WebApplication1.Controllers
             data.Categories = categories.ToList();
             return View(data);
         }
-
        
         public IActionResult List()
         {
@@ -136,6 +135,81 @@ namespace WebApplication1.Controllers
                 TempData["error"] = "Item has not been deleted";
             }
             return RedirectToAction("List");
+        }
+
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var originalItem = itemsService.GetItem(id);
+            var categories = categoriesService.GetCategories();
+
+            CreateItemViewModel model = new CreateItemViewModel();
+            model.Categories = categories.ToList();
+            model.Name = originalItem.Name;
+            model.CategoryId = categories.SingleOrDefault(x => x.Title == originalItem.Category).Id;
+            model.Description = originalItem.Description;
+            model.PhotoPath = originalItem.PhotoPath;
+            model.Stock = originalItem.Stock;
+            model.Price = originalItem.Price;
+            
+            return View(model);
+        }
+
+        public IActionResult Edit(int id, CreateItemViewModel data, IFormFile file)
+        {
+            try
+            {
+                var oldItem = itemsService.GetItem(id);
+                if (ModelState.IsValid)
+                {
+                 //   string username = User.Identity.Name; //gives you the email/username of the currently logged in user
+
+                    if (file != null)
+                    {
+                        //1 change filename
+                        string uniqueFilename = Guid.NewGuid().ToString() + System.IO.Path.GetExtension(file.FileName);
+
+                        //2. i need the absolute path of the folder where the image is going....
+                        //e.g. C:\Users\attar\Source\Repos\SWD62AEP2022v1\WebApplication1\wwwroot\Images\
+                        string absolutePath = host.WebRootPath;
+
+                        //3. saving file
+                        using (FileStream fsOut = new FileStream(absolutePath + "\\Images\\" + uniqueFilename, FileMode.CreateNew))
+                        {
+                            file.CopyTo(fsOut);
+                        }
+
+                        //4. save the path to the image in the database
+                        //http://localhost:xxxx/Images/filename.jpg
+                        data.PhotoPath = "/Images/" + uniqueFilename;
+
+                        //delete the old physical file (image)
+                   
+                        string absolutePathOfOldImage = host.WebRootPath + "\\Images\\" + Path.GetFileName(oldItem.PhotoPath);
+                        if (System.IO.File.Exists(absolutePathOfOldImage) == true)
+                        {
+                            System.IO.File.Delete(absolutePathOfOldImage);
+                        }
+                    }
+                    else
+                    {
+                        data.PhotoPath = oldItem.PhotoPath;
+                    }
+ 
+                    itemsService.EditItem(id, data);  
+                                                
+                    ViewBag.Message = "Item updated successfully";
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Item wasn't updated successfully. Please check your inputs";
+            }
+
+            var categories = categoriesService.GetCategories();
+            data.Categories = categories.ToList();
+            return View(data);
         }
     }
 }
