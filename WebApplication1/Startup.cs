@@ -71,13 +71,19 @@ namespace WebApplication1
             //we are instructing the clr so that when it comes across ICategoriesRepository (in the constructor), it should initialize
             //the class declared after the comma
 
-            FileInfo fi = new FileInfo(@"C:\Users\attar\source\repos\SWD62AEP2022v1\WebApplication1\Data\categories.txt");
-            //reads categories from a file
-           //  services.AddScoped<ICategoriesRepository, CategoriesFileRepository>(x => new CategoriesFileRepository(fi));
-            
-            //reads categories from db
-            services.AddScoped<ICategoriesRepository, CategoriesRepository>();
-            
+            string approach = Configuration.GetSection("approach").Value;
+
+            if (approach=="db")
+            {
+                services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+            }
+            else
+            {
+                FileInfo fi = new FileInfo(@"C:\Users\attar\source\repos\SWD62AEP2022v1\WebApplication1\Data\categories.txt");
+                //reads categories from a file
+                services.AddScoped<ICategoriesRepository, CategoriesFileRepository>(x => new CategoriesFileRepository(fi));
+            }
+ 
             services.AddScoped<CategoriesServices>();
         }
 

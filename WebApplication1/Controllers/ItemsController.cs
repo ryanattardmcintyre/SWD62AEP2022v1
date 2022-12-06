@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication1.ActionFilters;
 
 namespace WebApplication1.Controllers
 {
@@ -38,7 +39,7 @@ namespace WebApplication1.Controllers
 
         //a method to handle the submission of the form
         [HttpPost]
-        [Authorize]
+        [Authorize] //only checks whether a user is logged in or not
         public IActionResult Create(CreateItemViewModel data, IFormFile file)
         { //.....
             try
@@ -120,6 +121,7 @@ namespace WebApplication1.Controllers
         }
 
         [Authorize]
+        [FilePermissionAuthorization()]
         public IActionResult Delete(int id)
         {
             try

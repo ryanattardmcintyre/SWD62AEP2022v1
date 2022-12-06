@@ -26,7 +26,6 @@ namespace BusinessLogic.Services
 
         public void AddItem(CreateItemViewModel item)
         {
-             
             if (ir.GetItems().Any(myItem => myItem.Name == item.Name))
                 throw new Exception("Item with the same name already exists");
             else

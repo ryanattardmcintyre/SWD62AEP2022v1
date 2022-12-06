@@ -9,5 +9,6 @@ namespace Domain.Interfaces
     public interface ICategoriesRepository
     {
         IQueryable<Category> GetCategories();
+        //void AddCategory(Category c);
     }
 }
