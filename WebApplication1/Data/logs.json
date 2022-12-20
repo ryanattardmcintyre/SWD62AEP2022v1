@@ -1,0 +1,10 @@
+{"Date":"20/12/2022 13:13:13","Message":"User trying to add a new item with name item 111111","Type":"info"}
+{"Date":"20/12/2022 13:13:38","Message":"Validations for item 111111 were found to be ok","Type":"info"}
+{"Date":"20/12/2022 13:13:38","Message":"Unique filename for item 111111 is f162c978-e3e8-4df9-b218-7eda8d5b915b.jpg","Type":"info"}
+{"Date":"20/12/2022 13:13:38","Message":"Absolute path were image of item 111111 is going to be saved: C:\\Users\\attar\\source\\repos\\SWD62AEP2022v1\\WebApplication1\\wwwroot","Type":"info"}
+{"Date":"20/12/2022 13:13:38","Message":"Writing image of item 111111 / f162c978-e3e8-4df9-b218-7eda8d5b915b.jpg","Type":"info"}
+{"Date":"20/12/2022 13:13:38","Message":"Image written successfully of item 111111 / f162c978-e3e8-4df9-b218-7eda8d5b915b.jpg","Type":"info"}
+{"Date":"20/12/2022 13:13:39","Message":"Saved in db info for item 111111","Type":"info"}
+{"Date":"20/12/2022 13:14:53","Message":"User trying to add a new item with name item 111111","Type":"info"}
+{"Date":"20/12/2022 13:14:53","Message":"Validations for item 111111 were found to be ok","Type":"info"}
+{"Date":"20/12/2022 13:14:53","Message":"Item item 111111 generated an exception: Item with the same name already exists","Type":"error"}

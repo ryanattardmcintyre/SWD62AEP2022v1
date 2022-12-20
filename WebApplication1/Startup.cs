@@ -85,6 +85,10 @@ namespace WebApplication1
             }
  
             services.AddScoped<CategoriesServices>();
+
+            services.AddScoped<ILogRepository, LogInTextFileRepository>(provider => new LogInTextFileRepository(
+            @"C:\Users\attar\source\repos\SWD62AEP2022v1\WebApplication1\Data\logs.json"));
+            services.AddScoped<LogsServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -97,7 +101,10 @@ namespace WebApplication1
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
+               
+                //app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

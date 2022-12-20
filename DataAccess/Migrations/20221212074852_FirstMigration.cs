@@ -39,7 +39,9 @@ namespace DataAccess.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -175,7 +177,8 @@ namespace DataAccess.Migrations
                     CategoryId = table.Column<int>(nullable: false),
                     Price = table.Column<double>(nullable: false),
                     Description = table.Column<string>(nullable: true),
-                    PhotoPath = table.Column<string>(nullable: true)
+                    PhotoPath = table.Column<string>(nullable: true),
+                    Stock = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

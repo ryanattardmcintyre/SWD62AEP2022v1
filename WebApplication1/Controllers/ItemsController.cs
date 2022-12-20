@@ -20,8 +20,12 @@ namespace WebApplication1.Controllers
         private ItemsServices itemsService;
         private CategoriesServices categoriesService;
         private IWebHostEnvironment host;
-        public ItemsController(ItemsServices _itemsService, IWebHostEnvironment _host, CategoriesServices _categoriesService)
-        { itemsService = _itemsService;
+        private LogsServices logsService;
+        public ItemsController(ItemsServices _itemsService, IWebHostEnvironment _host, CategoriesServices _categoriesService, 
+             LogsServices _logsServices)
+        {
+            logsService = _logsServices;
+            itemsService = _itemsService;
             host = _host;
             categoriesService = _categoriesService;
         }
@@ -44,14 +48,16 @@ namespace WebApplication1.Controllers
         { //.....
             try
             {
+                logsService.LogMessage($"User trying to add a new item with name {data.Name}", "info");
+
                 if (ModelState.IsValid)
                 {
-
+                    logsService.LogMessage($"Validations for {data.Name} were found to be ok", "info");
                     //check that the category exists in the db
 
                     //if not
-                  //  ModelState.AddModelError("CategoryId", "Category is not valid");
-                 //   return View(data);
+                    //  ModelState.AddModelError("CategoryId", "Category is not valid");
+                    //   return View(data);
 
 
                     string username = User.Identity.Name; //gives you the email/username of the currently logged in user
@@ -60,18 +66,19 @@ namespace WebApplication1.Controllers
                     {
                         //1 change filename
                         string uniqueFilename = Guid.NewGuid().ToString() + System.IO.Path.GetExtension(file.FileName);
-
+                        logsService.LogMessage($"Unique filename for {data.Name} is {uniqueFilename}", "info");
                         //2. i need the absolute path of the folder where the image is going....
                         //e.g. C:\Users\attar\Source\Repos\SWD62AEP2022v1\WebApplication1\wwwroot\Images\
 
                         string absolutePath = host.WebRootPath;
-
+                        logsService.LogMessage($"Absolute path were image of {data.Name} is going to be saved: {absolutePath}", "info");
                         //3. saving file
                         using (FileStream fsOut = new FileStream(absolutePath + "\\Images\\" + uniqueFilename, FileMode.CreateNew))
                         {
+                            logsService.LogMessage($"Writing image of {data.Name} / {uniqueFilename}", "info");
                             file.CopyTo(fsOut);
                         }
-
+                        logsService.LogMessage($"Image written successfully of {data.Name} / {uniqueFilename}", "info");
                         //4. save the path to the image in the database
                         //http://localhost:xxxx/Images/filename.jpg
                         data.PhotoPath = "/Images/" + uniqueFilename;
@@ -81,13 +88,19 @@ namespace WebApplication1.Controllers
                     itemsService.AddItem(data); //to test
                                                 //dynamic object - it builds the declared properties on-the-fly i.e. the moment you declare the property
                                                 //"Message" it builds in realtime in memory
+
+                    logsService.LogMessage($"Saved in db info for {data.Name}", "info");
                     ViewBag.Message = "Item successfully inserted in database";
                 }
-               
+                else
+                {
+                    logsService.LogMessage($"Validations for {data.Name} were not ok", "warning");
+                }
 
             }
             catch(Exception ex)
             {
+                logsService.LogMessage($"Item {data.Name} generated an exception: {ex.Message}", "error");
                 ViewBag.Error = "Item wasn't inserted successfully. Please check your inputs";
             }
 
